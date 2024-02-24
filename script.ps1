@@ -114,7 +114,8 @@ foreach ($Computer in $ArrComputers) {
         "   Adapter Name: $($adapter.Name)"
         "   Adapter Type: $($AdapterTypeID_map[[int]$adapter.AdapterTypeID])"
         "   MAC Address: $($adapter.MacAddress)"
-        "   IP Address(es): $($ipAddresses[$($ipAddresses.Lenght) -1])"
+        "   IP Address (Local): $($ipAddresses[$($ipAddresses.Lenght) -1])"
+        "   IP Address (External) : $((Invoke-WebRequest ifconfig.me).content)"
         "   Status: $($adapter.Status)"        
         "   ----------------------------------------------------"
     }
