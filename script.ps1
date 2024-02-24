@@ -42,6 +42,7 @@ $CPUArchitecture = @{
 }
 
 Clear-Host
+Write-Host "Loading ..."
 foreach ($Computer in $ArrComputers) {
     $computerCPU = Get-CimInstance -ClassName Win32_Processor
     $computerGPU = Get-CimInstance -ClassName Win32_VideoController
@@ -52,38 +53,42 @@ foreach ($Computer in $ArrComputers) {
     $networkAdapters = Get-NetAdapter
     $bios = Get-CimInstance -ClassName Win32_BIOS
 
+    Clear-Host
+
+
     Write-Host "System Information for: $($computerSystem.Name)" -BackgroundColor DarkCyan
     "-------------------------------------------------------"
     Write-Host "Operating System Information:" -BackgroundColor Magenta
-    "Name: $($operatingSystem.Caption)"
-    "Version: $($operatingSystem.Version)"
-    "Architecture: $($operatingSystem.OSArchitecture)"
     $uptime = (Get-Date) - $operatingSystem.LastBootUpTime
-    "System Uptime: $($uptime.Days) Days, $($uptime.Hours) Hours, $($uptime.Minutes) Minutes"
+    "   Name: $($operatingSystem.Caption)"
+    "   Version: $($operatingSystem.Version)"
+    "   Architecture: $($operatingSystem.OSArchitecture)"
+    "   System Uptime: $($uptime.Days) Days, $($uptime.Hours) Hours, $($uptime.Minutes) Minutes"
     "-------------------------------------------------------"    
     Write-Host "CPU Information:" -BackgroundColor Magenta
-    "Name: $($computerCPU.Name)"
-    "Manufacturer: $($computerCPU.Manufacturer)"
-    "Number of Cores: $($computerCPU.NumberOfCores)"
-    "Number of Logical Processors: $($computerCPU.NumberOfLogicalProcessors)"
-    "Max Clock Speed: $($computerCPU.MaxClockSpeed) GHz"
-    "Architecture: $($computerCPU | Select-Object -Property $CPUArchitecture | Select-Object -ExpandProperty Architecture)"
+    "   Name: $($computerCPU.Name)"
+    "   Manufacturer: $($computerCPU.Manufacturer)"
+    "   Number of Cores: $($computerCPU.NumberOfCores)"
+    "   Number of Logical Processors: $($computerCPU.NumberOfLogicalProcessors)"
+    "   Max Clock Speed: $($computerCPU.MaxClockSpeed) GHz"
+    "   Architecture: $($computerCPU | Select-Object -Property $CPUArchitecture | Select-Object -ExpandProperty Architecture)"
     "-------------------------------------------------------"
 
     Write-Host "GPU Information:" -BackgroundColor Magenta
     foreach ($gpu in $computerGPU) {
-        "Device Name: $($gpu.Description)"
-        "Adapter Compatibility: $($gpu.AdapterCompatibility)"
-        "Adapter RAM: $([math]::Round($gpu.AdapterRAM / 1GB, 2)) GB"
-        "Driver Version: $($gpu.DriverVersion)"
+        $qwMemorySize = (Get-ItemProperty -Path "HKLM:\SYSTEM\ControlSet001\Control\Class\{4d36e968-e325-11ce-bfc1-08002be10318}\0*" -Name HardwareInformation.qwMemorySize -ErrorAction SilentlyContinue)."HardwareInformation.qwMemorySize"
+        "   Device Name: $($gpu.Description)"
+        "   Adapter Compatibility: $($gpu.AdapterCompatibility)"
+        "   VRAM: $([math]::round($qwMemorySize / 1GB)) GB"
+        "   Driver Version: $($gpu.DriverVersion)"
         "-------------------------------------------------------"
     }
 
     Write-Host "Memory Information:" -BackgroundColor Magenta
-    "Total Physical Memory:"
     $totalRAM = ($computerMemory | Measure-Object -Property Capacity -Sum).Sum
-    "Total RAM: $([math]::Round($totalRAM / 1GB, 2)) GB"
-    "Memory Slots:"
+    "   Total Physical Memory:"
+    "   Total RAM: $([math]::Round($totalRAM / 1GB, 2)) GB"
+    "   Memory Slots:"
     "   ----------------------------------------------------"
     foreach ($memory in $computerMemory) {
         $memoryCapacityGB = [math]::Round($memory.Capacity / 1GB, 2)
@@ -93,6 +98,7 @@ foreach ($Computer in $ArrComputers) {
         "   Speed: $($memory.Speed) MHz"
         "   ----------------------------------------------------"
     }
+    ""
     "-------------------------------------------------------"
 
     Write-Host "Disk Information:" -BackgroundColor Magenta
@@ -122,9 +128,9 @@ foreach ($Computer in $ArrComputers) {
     "-------------------------------------------------------"
 
     Write-Host "BIOS Information:" -BackgroundColor Magenta
-    "Manufacturer: $($bios.Manufacturer)"
-    "Version: $($bios.SMBIOSBIOSVersion)"
-    "Release Date: $($bios.ReleaseDate)"
+    "   Manufacturer: $($bios.Manufacturer)"
+    "   Version: $($bios.SMBIOSBIOSVersion)"
+    "   Release Date: $($bios.ReleaseDate)"
     "----------------------------------------------------"
 }
 Pause
