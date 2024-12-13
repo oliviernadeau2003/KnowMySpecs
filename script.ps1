@@ -86,7 +86,7 @@ foreach ($Computer in $ArrComputers) {
 
     Write-Host "Memory Information:" -BackgroundColor Magenta
     $totalRAM = ($computerMemory | Measure-Object -Property Capacity -Sum).Sum
-    "   Total Physical Memory:"
+    # "   Total Physical Memory:"
     "   Total RAM: $([math]::Round($totalRAM / 1GB, 2)) GB"
     "   Memory Slots:"
     "   ----------------------------------------------------"
