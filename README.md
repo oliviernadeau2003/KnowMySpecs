@@ -6,7 +6,7 @@ KnowMyComponents is a PowerShell script that retrieves and displays detailed inf
 
 - Displays detailed information about:
   - CPU: Name, manufacturer, number of cores, number of logical processors, max clock speed, and architecture.
-  - GPU: Device name, adapter compatibility, adapter RAM, and driver version.
+  - GPU: Device name, adapter compatibility, VRAM, and driver version.
   - Memory: Total physical memory, memory slots (manufacturer, model, capacity, and speed).
   - Disk: Drive, volume name, file system, total size, and free space.
   - Network: Adapter name, adapter type, MAC address, IP address(es), and status.
